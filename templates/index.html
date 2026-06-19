@@ -1,48 +1,52 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
-<title>Driver Monitoring System</title>
-
-<link rel="stylesheet"
-href="{{ url_for('static',
-filename='style.css') }}">
-
+    <title>Driver Monitoring System</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
 
 <div class="container">
 
-<h1>🚗 Driver Monitoring System</h1>
+    <h1>🚗 Driver Monitoring System</h1>
 
-<div class="camera-box">
+    <video id="video" autoplay playsinline></video>
 
-<img src="{{ url_for('video') }}">
+    <div class="cards">
 
-</div>
+        <div class="card">
+            <h2>Status</h2>
+            <p>Monitoring Driver</p>
+        </div>
 
-<div class="cards">
+        <div class="card">
+            <h2>Drowsiness</h2>
+            <p id="status">Normal</p>
+        </div>
 
-<div class="card">
-<h2>Status</h2>
-<p>Monitoring Driver</p>
-</div>
+        <div class="card">
+            <h2>Distraction</h2>
+            <p>No</p>
+        </div>
 
-<div class="card">
-<h2>Drowsiness</h2>
-<p>Normal</p>
-</div>
-
-<div class="card">
-<h2>Distraction</h2>
-<p>No</p>
-</div>
+    </div>
 
 </div>
 
-</div>
+<script>
+const video = document.getElementById("video");
+
+navigator.mediaDevices
+.getUserMedia({ video: true })
+.then(function(stream) {
+    video.srcObject = stream;
+})
+.catch(function(error) {
+    console.log(error);
+    alert("Camera permission denied.");
+});
+</script>
 
 </body>
 </html>
