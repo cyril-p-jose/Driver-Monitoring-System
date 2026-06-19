@@ -1,13 +1,21 @@
 from flask import Flask, render_template, Response
 import cv2
+from datetime import datetime
 
 app = Flask(__name__)
 
 camera = cv2.VideoCapture(0)
 
 face_cascade = cv2.CascadeClassifier(
+    cv2.data.haarcascades +
     "haarcascade_frontalface_default.xml"
 )
+
+def log_event(message):
+    with open("logs/events.txt", "a") as file:
+        file.write(
+            f"{datetime.now()} - {message}\n"
+        )
 
 def generate_frames():
 
@@ -35,7 +43,7 @@ def generate_frames():
                 frame,
                 (x, y),
                 (x+w, y+h),
-                (0,255,0),
+                (0, 255, 0),
                 2
             )
 
@@ -50,31 +58,30 @@ def generate_frames():
             )
 
         ret, buffer = cv2.imencode(
-            '.jpg',
+            ".jpg",
             frame
         )
 
         frame = buffer.tobytes()
 
-        yield (
+        yield(
             b'--frame\r\n'
             b'Content-Type: image/jpeg\r\n\r\n'
             + frame +
             b'\r\n'
         )
 
-@app.route('/')
+@app.route("/")
 def home():
-    return render_template('index.html')
+    return render_template("index.html")
 
-@app.route('/video')
+@app.route("/video")
 def video():
-
     return Response(
         generate_frames(),
-        mimetype=
-        'multipart/x-mixed-replace; boundary=frame'
+        mimetype='multipart/x-mixed-replace; boundary=frame'
     )
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    log_event("System Started")
+    app.run(host="0.0.0.0", port=5000)
