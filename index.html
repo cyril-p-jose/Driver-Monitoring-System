@@ -3,12 +3,11 @@
 
 <head>
 
-    <title>Driver Monitoring System</title>
+<title>Driver Monitoring System</title>
 
-    <link
-    rel="stylesheet"
-    href="{{ url_for('static',
-    filename='style.css') }}">
+<link rel="stylesheet"
+href="{{ url_for('static',
+filename='style.css') }}">
 
 </head>
 
@@ -16,38 +15,34 @@
 
 <div class="container">
 
-    <h1>
-        🚗 Driver Monitoring System
-    </h1>
+<h1>🚗 Driver Monitoring System</h1>
 
-    <div class="camera-box">
+<div class="camera-box">
 
-        <img src="{{ url_for('video') }}">
+<img src="{{ url_for('video') }}">
 
-    </div>
+</div>
 
-    <div class="cards">
+<div class="cards">
 
-        <div class="card">
+<div class="card">
+<h2>Status</h2>
+<p>Monitoring Driver</p>
+</div>
 
-            <h2>Status</h2>
+<div class="card">
+<h2>Drowsiness</h2>
+<p>Normal</p>
+</div>
 
-            <p>Monitoring Driver</p>
+<div class="card">
+<h2>Distraction</h2>
+<p>No</p>
+</div>
 
-        </div>
-
-        <div class="card">
-
-            <h2>Alert</h2>
-
-            <p>Normal</p>
-
-        </div>
-
-    </div>
+</div>
 
 </div>
 
 </body>
-
 </html>
