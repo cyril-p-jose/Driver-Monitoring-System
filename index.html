@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Driver Monitoring System</title>
+
+    <link
+    rel="stylesheet"
+    href="{{ url_for('static',
+    filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>
+        🚗 Driver Monitoring System
+    </h1>
+
+    <div class="camera-box">
+
+        <img src="{{ url_for('video') }}">
+
+    </div>
+
+    <div class="cards">
+
+        <div class="card">
+
+            <h2>Status</h2>
+
+            <p>Monitoring Driver</p>
+
+        </div>
+
+        <div class="card">
+
+            <h2>Alert</h2>
+
+            <p>Normal</p>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
