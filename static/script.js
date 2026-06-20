@@ -226,6 +226,15 @@ if(MAR > 0.30){
         ).innerHTML = yawnCount;
 
         yawnDetected = true;
+
+        if(Date.now() - lastPenaltyTime > 5000){
+
+            score = Math.max(0, score - 5);
+
+            scoreElement.innerHTML = score;
+
+            lastPenaltyTime = Date.now();
+        }
     }
 
 }
@@ -235,22 +244,6 @@ else{
     "No";
 
     yawnDetected = false;
-}
-    if(Date.now() - lastPenaltyTime > 5000){
-
-    score = Math.max(0, score - 5);
-
-    scoreElement.innerHTML = score;
-
-    lastPenaltyTime = Date.now();
-}
-
-}
-else{
-
-    yawning.innerHTML =
-    "No";
-
 }
 
         // Left Eye Landmarks
