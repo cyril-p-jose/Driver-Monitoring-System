@@ -17,6 +17,8 @@ const historyList =
 document.getElementById("history");
 function addHistory(message){
 
+    if(!historyList) return;
+
     const item =
     document.createElement("li");
 
@@ -28,13 +30,6 @@ function addHistory(message){
 
     historyList.prepend(item);
 }
-addHistory(
-"🚨 Drowsiness Detected"
-);
-addHistory(
-"🥱 Yawning Detected"
-);
-
 
 const scoreElement =
 document.getElementById("score");
@@ -57,9 +52,25 @@ document.getElementById("faceStatus");
 const alarm = new Audio("/static/alarm.mp3");
 
 navigator.mediaDevices
-.getUserMedia({ video: true })
+.getUserMedia({
+    video: true
+})
 .then(stream => {
+
+    console.log("Camera Started");
+
     video.srcObject = stream;
+
+    video.play();
+
+})
+.catch(error => {
+
+    console.error(
+        "Camera Error:",
+        error
+    );
+
 });
 
 const faceMesh = new FaceMesh({
