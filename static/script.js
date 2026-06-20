@@ -379,6 +379,7 @@ async function updateObjectDetection(){
 
     const data =
     await response.json();
+    console.log(data);
 
     document.getElementById(
         "phoneStatus"
