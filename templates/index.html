@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Driver Monitoring System</title>
+
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -22,7 +23,7 @@
 
         <div class="card">
             <h2>Drowsiness</h2>
-            <p id="status">Normal</p>
+            <p id="drowsiness">Normal</p>
         </div>
 
         <div class="card">
@@ -35,17 +36,24 @@
 </div>
 
 <script>
+
 const video = document.getElementById("video");
 
 navigator.mediaDevices
 .getUserMedia({ video: true })
-.then(function(stream) {
+.then(function(stream){
+
     video.srcObject = stream;
+
 })
-.catch(function(error) {
+.catch(function(error){
+
     console.log(error);
-    alert("Camera permission denied.");
+
+    alert("Camera Permission Denied");
+
 });
+
 </script>
 
 </body>
