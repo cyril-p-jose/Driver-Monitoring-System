@@ -1,3 +1,9 @@
+let yawnDetected = false;
+let drowsyDetected = false;
+
+let drowsyCount = 0;
+let yawnCount = 0;
+
 const headPose =
 document.getElementById("headPose");
 
@@ -151,13 +157,28 @@ mouthHeight / mouthWidth;
 
 if(MAR > 0.30){
 
-  yawning.innerHTML =
-"🥱 Yawning";
+    yawning.innerHTML =
+    "🥱 Yawning";
 
-setStatusColor(
-    yawning,
-    "warning"
-);
+    if(!yawnDetected){
+
+        yawnCount++;
+
+        document.getElementById(
+            "yawnCount"
+        ).innerHTML = yawnCount;
+
+        yawnDetected = true;
+    }
+
+}
+else{
+
+    yawning.innerHTML =
+    "No";
+
+    yawnDetected = false;
+}
     if(Date.now() - lastPenaltyTime > 5000){
 
     score = Math.max(0, score - 5);
@@ -206,13 +227,28 @@ else{
 
             if(closedTime > 2000){
 
-                drowsiness.innerHTML =
-"🚨 DROWSINESS DETECTED";
+    drowsiness.innerHTML =
+    "🚨 DROWSINESS DETECTED";
 
-setStatusColor(
-    drowsiness,
-    "danger"
-);
+    if(!drowsyDetected){
+
+        drowsyCount++;
+
+        document.getElementById(
+            "drowsyCount"
+        ).innerHTML = drowsyCount;
+
+        drowsyDetected = true;
+    }
+
+}
+else{
+
+    drowsyDetected = false;
+
+    drowsiness.innerHTML =
+    "Normal";
+}
                 if(Date.now() - lastPenaltyTime > 5000){
 
     score = Math.max(0, score - 10);
