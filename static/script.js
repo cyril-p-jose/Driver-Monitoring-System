@@ -1,5 +1,10 @@
 const video = document.getElementById("video");
-const statusText = document.getElementById("drowsiness");
+
+const drowsiness =
+document.getElementById("drowsiness");
+
+const faceStatus =
+document.getElementById("faceStatus");
 
 navigator.mediaDevices
 .getUserMedia({ video: true })
@@ -20,19 +25,33 @@ faceMesh.setOptions({
     minTrackingConfidence: 0.5
 });
 
+let lastFaceTime = Date.now();
+
 faceMesh.onResults(results => {
 
     if(results.multiFaceLandmarks &&
        results.multiFaceLandmarks.length > 0){
 
-        statusText.innerHTML =
+        faceStatus.innerHTML =
         "Face Detected";
+
+        drowsiness.innerHTML =
+        "Normal";
+
+        lastFaceTime = Date.now();
 
     }
     else{
 
-        statusText.innerHTML =
+        faceStatus.innerHTML =
         "No Face";
+
+        if(Date.now() - lastFaceTime > 3000){
+
+            drowsiness.innerHTML =
+            "ALERT";
+
+        }
 
     }
 
