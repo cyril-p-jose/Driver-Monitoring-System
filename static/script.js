@@ -1,3 +1,32 @@
+const historyList =
+document.getElementById("history");
+function addHistory(message){
+
+    const item =
+    document.createElement("li");
+
+    const time =
+    new Date().toLocaleTimeString();
+
+    item.innerHTML =
+    `${time} - ${message}`;
+
+    historyList.prepend(item);
+}
+addHistory(
+"🚨 Drowsiness Detected"
+);
+addHistory(
+"🥱 Yawning Detected"
+);
+
+
+const scoreElement =
+document.getElementById("score");
+
+let score = 100;
+let lastPenaltyTime = 0;
+
 const yawning =
 document.getElementById("yawning");
 
@@ -75,6 +104,14 @@ if(MAR > 0.30){
 
     yawning.innerHTML =
     "🥱 Yawning";
+    if(Date.now() - lastPenaltyTime > 5000){
+
+    score = Math.max(0, score - 5);
+
+    scoreElement.innerHTML = score;
+
+    lastPenaltyTime = Date.now();
+}
 
 }
 else{
@@ -117,6 +154,14 @@ else{
 
                 drowsiness.innerHTML =
                 "🚨 DROWSINESS DETECTED";
+                if(Date.now() - lastPenaltyTime > 5000){
+
+    score = Math.max(0, score - 10);
+
+    scoreElement.innerHTML = score;
+
+    lastPenaltyTime = Date.now();
+}
 
                 alarm.play();
             }
