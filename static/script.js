@@ -1,3 +1,7 @@
+const yawning =
+document.getElementById("yawning");
+
+
 const video = document.getElementById("video");
 
 const drowsiness =
