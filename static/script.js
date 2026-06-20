@@ -151,8 +151,13 @@ mouthHeight / mouthWidth;
 
 if(MAR > 0.30){
 
-    yawning.innerHTML =
-    "🥱 Yawning";
+  yawning.innerHTML =
+"🥱 Yawning";
+
+setStatusColor(
+    yawning,
+    "warning"
+);
     if(Date.now() - lastPenaltyTime > 5000){
 
     score = Math.max(0, score - 5);
@@ -202,7 +207,12 @@ else{
             if(closedTime > 2000){
 
                 drowsiness.innerHTML =
-                "🚨 DROWSINESS DETECTED";
+"🚨 DROWSINESS DETECTED";
+
+setStatusColor(
+    drowsiness,
+    "danger"
+);
                 if(Date.now() - lastPenaltyTime > 5000){
 
     score = Math.max(0, score - 10);
@@ -220,8 +230,13 @@ else{
 
             eyesClosedStart = null;
 
-            drowsiness.innerHTML =
-            "Normal";
+           drowsiness.innerHTML =
+"Normal";
+
+setStatusColor(
+    drowsiness,
+    "normal"
+);
         }
 
     }
@@ -251,3 +266,24 @@ async () => {
 
     detect();
 });
+
+function setStatusColor(element, type){
+
+    if(type === "normal"){
+
+        element.style.color =
+        "#22c55e";
+
+    }
+    else if(type === "warning"){
+
+        element.style.color =
+        "#facc15";
+
+    }
+    else{
+
+        element.style.color =
+        "#ef4444";
+    }
+}
