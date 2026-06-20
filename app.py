@@ -8,13 +8,14 @@ model = YOLO("models/yolov8n.pt")
 @app.route("/")
 def home():
     return render_template("index.html")
-    @app.route("/detect_objects", methods=["POST"])
+   @app.route("/detect_objects", methods=["POST"])
 def detect_objects():
 
     return jsonify({
         "phone": False,
         "seatbelt": True,
-        "persons": 1
+        "persons": 1,
+        "model_loaded": True
     })
 
 if __name__ == "__main__":
