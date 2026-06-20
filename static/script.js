@@ -1,3 +1,9 @@
+const canvas =
+document.getElementById("canvas");
+
+const ctx =
+canvas.getContext("2d");
+
 let yawnDetected = false;
 let drowsyDetected = false;
 
@@ -81,6 +87,46 @@ function distance(p1, p2){
 }
 
 faceMesh.onResults(results => {
+    canvas.width =
+video.videoWidth;
+
+canvas.height =
+video.videoHeight;
+
+ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+);
+    if(
+results.multiFaceLandmarks &&
+results.multiFaceLandmarks.length > 0
+){
+
+    const face =
+    results.multiFaceLandmarks[0];
+
+    face.forEach(point => {
+
+        ctx.beginPath();
+
+        ctx.arc(
+            point.x * canvas.width,
+            point.y * canvas.height,
+            1.5,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fillStyle =
+        "#00ffff";
+
+        ctx.fill();
+
+    });
+
+}
 
     if(
         results.multiFaceLandmarks &&
