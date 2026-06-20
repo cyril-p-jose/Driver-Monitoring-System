@@ -1,3 +1,5 @@
+const alarm = new Audio("/static/alarm.mp3");
+
 const video = document.getElementById("video");
 
 const drowsiness =
@@ -50,7 +52,7 @@ faceMesh.onResults(results => {
 
             drowsiness.innerHTML =
             "ALERT";
-
+                alarm.play();
         }
 
     }
