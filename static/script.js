@@ -369,3 +369,38 @@ function setStatusColor(element, type){
         "#ef4444";
     }
 }
+
+async function updateObjectDetection(){
+
+    const response =
+    await fetch("/detect_objects",{
+        method:"POST"
+    });
+
+    const data =
+    await response.json();
+
+    document.getElementById(
+        "phoneStatus"
+    ).innerHTML =
+    data.phone ?
+    "📱 Detected" :
+    "No Phone";
+
+    document.getElementById(
+        "seatbeltStatus"
+    ).innerHTML =
+    data.seatbelt ?
+    "🦺 Wearing" :
+    "❌ No Seatbelt";
+
+    document.getElementById(
+        "personCount"
+    ).innerHTML =
+    data.persons;
+}
+
+setInterval(
+    updateObjectDetection,
+    2000
+);
