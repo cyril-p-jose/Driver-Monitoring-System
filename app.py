@@ -3,6 +3,7 @@ from ultralytics import YOLO
 import cv2
 import numpy as np
 app = Flask(__name__)
+model = YOLO("models/yolov8n.pt")
 
 @app.route("/")
 def home():
