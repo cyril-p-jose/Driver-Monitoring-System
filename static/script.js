@@ -1,3 +1,6 @@
+const headPose =
+document.getElementById("headPose");
+
 const historyList =
 document.getElementById("history");
 function addHistory(message){
@@ -83,6 +86,52 @@ faceMesh.onResults(results => {
 
         const face =
         results.multiFaceLandmarks[0];
+     const nose = face[1];
+
+if(nose.x < 0.40){
+
+    headPose.innerHTML =
+    "⬅ Looking Left";
+
+    addHistory(
+        "⚠ Looking Left"
+    );
+
+    if(Date.now() - lastPenaltyTime > 5000){
+
+        score = Math.max(0, score - 2);
+
+        scoreElement.innerHTML = score;
+
+        lastPenaltyTime = Date.now();
+    }
+
+}
+else if(nose.x > 0.60){
+
+    headPose.innerHTML =
+    "➡ Looking Right";
+
+    addHistory(
+        "⚠ Looking Right"
+    );
+
+    if(Date.now() - lastPenaltyTime > 5000){
+
+        score = Math.max(0, score - 2);
+
+        scoreElement.innerHTML = score;
+
+        lastPenaltyTime = Date.now();
+    }
+
+}
+else{
+
+    headPose.innerHTML =
+    "⬆ Looking Forward";
+
+}
         // Mouth landmarks
 
 const mouthTop = face[13];
