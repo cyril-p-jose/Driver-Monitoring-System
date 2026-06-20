@@ -54,6 +54,35 @@ faceMesh.onResults(results => {
 
         const face =
         results.multiFaceLandmarks[0];
+        // Mouth landmarks
+
+const mouthTop = face[13];
+const mouthBottom = face[14];
+
+const mouthLeft = face[78];
+const mouthRight = face[308];
+
+const mouthHeight =
+distance(mouthTop, mouthBottom);
+
+const mouthWidth =
+distance(mouthLeft, mouthRight);
+
+const MAR =
+mouthHeight / mouthWidth;
+
+if(MAR > 0.30){
+
+    yawning.innerHTML =
+    "🥱 Yawning";
+
+}
+else{
+
+    yawning.innerHTML =
+    "No";
+
+}
 
         // Left Eye Landmarks
         const leftTop = face[159];
