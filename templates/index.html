@@ -1,86 +1,55 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Driver Monitoring System</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Driver Monitoring System</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='style.css') }}">
+
 </head>
+
 <body>
 
 <div class="container">
 
-    <h1>🚗 Driver Monitoring System</h1>
+<h1>🚗 Driver Monitoring System</h1>
 
-    <div class="video-container">
+<div class="video-container">
 
-   <video
-    id="video"
-    autoplay
-    muted
-    playsinline
-    style="width:100%; background:red;">
+<video
+id="video"
+autoplay
+muted
+playsinline>
 </video>
 
-    <canvas id="canvas"></canvas>
+<canvas id="canvas"></canvas>
 
 </div>
 
-   <div class="cards">
+<div class="cards">
 
-    <div class="card">
-        <h2>Status</h2>
-        <p id="status">Monitoring Driver</p>
-    </div>
-
-  <div class="card">
-    <h2>Drowsiness</h2>
-    <p id="drowsiness">Normal</p>
-</div>
-
-    <div class="card">
-        <h2>Face</h2>
-        <p id="faceStatus">Detecting...</p>
-    </div>
-       <div class="card">
-    <h2>Yawning</h2>
-    <p id="yawning">No</p>
-</div>
-       <div class="card">
-    <h2>Head Position</h2>
-    <p id="headPose">Forward</p>
-</div>
-       <div class="card">
-    <h2>Drowsiness Count</h2>
-    <p id="drowsyCount">0</p>
+<div class="card">
+<h2>Face</h2>
+<p id="faceStatus">Detecting...</p>
 </div>
 
 <div class="card">
-    <h2>Yawning Count</h2>
-    <p id="yawnCount">0</p>
-</div>
-       <div class="card">
-    <h2>Driver Score</h2>
-    <p id="score">100</p>
-</div>
-       <div class="card history-card">
-    <h2>Alert History</h2>
-    <ul id="history"></ul>
-</div>
-<div class="card">
-    <h2>Phone Detection</h2>
-    <p id="phoneStatus">No Phone</p>
+<h2>Head Position</h2>
+<p id="headPose">Forward</p>
 </div>
 
 <div class="card">
-    <h2>Seatbelt Status</h2>
-    <p id="seatbeltStatus">Unknown</p>
+<h2>Drowsiness</h2>
+<p id="drowsiness">Monitoring</p>
 </div>
 
-<div class="card">
-    <h2>Person Count</h2>
-    <p id="personCount">0</p>
-</div>
 </div>
 
 </div>
@@ -92,5 +61,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
 
 <script src="{{ url_for('static', filename='script.js') }}"></script>
+
 </body>
 </html>
