@@ -125,7 +125,7 @@ li{
     border-radius:20px;
 }
 
-#canvas{
+canvas{
     position:absolute;
     top:0;
     left:0;
