@@ -1,7 +1,3 @@
-// =========================
-// ELEMENTS
-// =========================
-
 const video =
 document.getElementById("video");
 
@@ -20,129 +16,37 @@ document.getElementById("headPose");
 const drowsiness =
 document.getElementById("drowsiness");
 
-const yawning =
-document.getElementById("yawning");
-
-const scoreElement =
-document.getElementById("score");
-
-const drowsyCountElement =
-document.getElementById("drowsyCount");
-
-const yawnCountElement =
-document.getElementById("yawnCount");
-
-const historyList =
-document.getElementById("history");
-
-// =========================
-// VARIABLES
-// =========================
-
-let score = 100;
-
-let drowsyCount = 0;
-let yawnCount = 0;
-
-let drowsyDetected = false;
-let yawnDetected = false;
-
 let eyesClosedStart = null;
+let drowsyDetected = false;
 
-let lastPenaltyTime = 0;
+function playAlarm(){
 
-// =========================
-// ALARM
-// =========================
+    const audioContext =
+    new (
+        window.AudioContext ||
+        window.webkitAudioContext
+    )();
 
-const alarm =
-new Audio("/static/alarm.mp3");
+    const oscillator =
+    audioContext.createOscillator();
 
-alarm.loop = true;
+    oscillator.type = "sine";
 
-// =========================
-// HISTORY
-// =========================
+    oscillator.frequency.value = 1000;
 
-function addHistory(message){
-
-    if(!historyList) return;
-
-    const item =
-    document.createElement("li");
-
-    const time =
-    new Date().toLocaleTimeString();
-
-    item.innerHTML =
-    `${time} - ${message}`;
-
-    historyList.prepend(item);
-
-    while(historyList.children.length > 20){
-
-        historyList.removeChild(
-            historyList.lastChild
-        );
-    }
-}
-
-// =========================
-// SCORE
-// =========================
-
-function reduceScore(points){
-
-    if(
-        Date.now() -
-        lastPenaltyTime <
-        5000
-    ){
-        return;
-    }
-
-    score =
-    Math.max(
-        0,
-        score - points
+    oscillator.connect(
+        audioContext.destination
     );
 
-    scoreElement.innerHTML =
-    score;
+    oscillator.start();
 
-    lastPenaltyTime =
-    Date.now();
+    setTimeout(() => {
+
+        oscillator.stop();
+
+    }, 500);
+
 }
-
-// =========================
-// COLORS
-// =========================
-
-function setStatusColor(
-    element,
-    type
-){
-
-    if(type === "normal"){
-
-        element.style.color =
-        "#22c55e";
-    }
-    else if(type === "warning"){
-
-        element.style.color =
-        "#facc15";
-    }
-    else{
-
-        element.style.color =
-        "#ef4444";
-    }
-}
-
-// =========================
-// DISTANCE
-// =========================
 
 function distance(
     p1,
@@ -161,15 +65,11 @@ function distance(
     );
 }
 
-// =========================
-// CAMERA
-// =========================
-
 navigator.mediaDevices
 .getUserMedia({
     video:true
 })
-.then(stream=>{
+.then(stream => {
 
     video.srcObject =
     stream;
@@ -181,7 +81,7 @@ navigator.mediaDevices
     );
 
 })
-.catch(error=>{
+.catch(error => {
 
     console.error(
         "Camera Error:",
@@ -189,10 +89,6 @@ navigator.mediaDevices
     );
 
 });
-
-// =========================
-// MEDIAPIPE
-// =========================
 
 const faceMesh =
 new FaceMesh({
@@ -214,11 +110,7 @@ faceMesh.setOptions({
 
 });
 
-// =========================
-// RESULTS
-// =========================
-
-faceMesh.onResults(results=>{
+faceMesh.onResults(results => {
 
     canvas.width =
     video.videoWidth;
@@ -239,21 +131,12 @@ faceMesh.onResults(results=>{
     ){
 
         faceStatus.innerHTML =
-        "Face Detected";
-
-        setStatusColor(
-            faceStatus,
-            "normal"
-        );
+        "✅ Face Detected";
 
         const face =
         results.multiFaceLandmarks[0];
 
-        // =====================
-        // DRAW LANDMARKS
-        // =====================
-
-        face.forEach(point=>{
+        face.forEach(point => {
 
             ctx.beginPath();
 
@@ -276,47 +159,23 @@ faceMesh.onResults(results=>{
 
         });
 
-        // =====================
-        // HEAD POSE
-        // =====================
-
         const nose =
         face[1];
 
-        const leftCheek =
-        face[234];
-
-        const rightCheek =
-        face[454];
-
-        const leftDistance =
-        Math.abs(
-            nose.x -
-            leftCheek.x
-        );
-
-        const rightDistance =
-        Math.abs(
-            rightCheek.x -
-            nose.x
-        );
-
         if(
-            leftDistance >
-            rightDistance + 0.03
-        ){
-
-            headPose.innerHTML =
-            "➡ Looking Right";
-
-        }
-        else if(
-            rightDistance >
-            leftDistance + 0.03
+            nose.x < 0.45
         ){
 
             headPose.innerHTML =
             "⬅ Looking Left";
+
+        }
+        else if(
+            nose.x > 0.55
+        ){
+
+            headPose.innerHTML =
+            "➡ Looking Right";
 
         }
         else{
@@ -325,84 +184,6 @@ faceMesh.onResults(results=>{
             "⬆ Looking Forward";
 
         }
-
-        // =====================
-        // YAWNING
-        // =====================
-
-        const mouthTop =
-        face[13];
-
-        const mouthBottom =
-        face[14];
-
-        const mouthLeft =
-        face[78];
-
-        const mouthRight =
-        face[308];
-
-        const mouthHeight =
-        distance(
-            mouthTop,
-            mouthBottom
-        );
-
-        const mouthWidth =
-        distance(
-            mouthLeft,
-            mouthRight
-        );
-
-        const MAR =
-        mouthHeight /
-        mouthWidth;
-
-        if(MAR > 0.30){
-
-            yawning.innerHTML =
-            "🥱 Yawning";
-
-            setStatusColor(
-                yawning,
-                "warning"
-            );
-
-            if(!yawnDetected){
-
-                yawnDetected =
-                true;
-
-                yawnCount++;
-
-                yawnCountElement.innerHTML =
-                yawnCount;
-
-                addHistory(
-                    "🥱 Yawning Detected"
-                );
-
-                reduceScore(5);
-            }
-
-        }
-        else{
-
-            yawning.innerHTML =
-            "No";
-
-            setStatusColor(
-                yawning,
-                "normal"
-            );
-
-            yawnDetected =
-            false;
-        }
-
-        // =====================
-        // DROWSINESS
-        // =====================
 
         const leftTop =
         face[159];
@@ -432,7 +213,9 @@ faceMesh.onResults(results=>{
         eyeHeight /
         eyeWidth;
 
-        if(EAR < 0.15){
+        if(
+            EAR < 0.20
+        ){
 
             if(
                 !eyesClosedStart
@@ -440,6 +223,7 @@ faceMesh.onResults(results=>{
 
                 eyesClosedStart =
                 Date.now();
+
             }
 
             const closedTime =
@@ -447,17 +231,11 @@ faceMesh.onResults(results=>{
             eyesClosedStart;
 
             if(
-                closedTime >
-                2000
+                closedTime > 2000
             ){
 
                 drowsiness.innerHTML =
-                "🚨 DROWSINESS";
-
-                setStatusColor(
-                    drowsiness,
-                    "danger"
-                );
+                "🚨 DROWSY";
 
                 if(
                     !drowsyDetected
@@ -466,19 +244,8 @@ faceMesh.onResults(results=>{
                     drowsyDetected =
                     true;
 
-                    drowsyCount++;
+                    playAlarm();
 
-                    drowsyCountElement.innerHTML =
-                    drowsyCount;
-
-                    addHistory(
-                        "🚨 Drowsiness Detected"
-                    );
-
-                    reduceScore(10);
-
-                    alarm.play()
-                    .catch(()=>{});
                 }
 
             }
@@ -490,54 +257,32 @@ faceMesh.onResults(results=>{
             null;
 
             drowsiness.innerHTML =
-            "Normal";
-
-            setStatusColor(
-                drowsiness,
-                "normal"
-            );
+            "✅ Normal";
 
             drowsyDetected =
             false;
 
-            alarm.pause();
-
-            alarm.currentTime =
-            0;
         }
 
     }
     else{
 
         faceStatus.innerHTML =
-        "No Face";
-
-        setStatusColor(
-            faceStatus,
-            "danger"
-        );
-
-        drowsiness.innerHTML =
-        "No Face";
+        "❌ No Face";
 
         headPose.innerHTML =
         "-";
 
-        alarm.pause();
+        drowsiness.innerHTML =
+        "-";
 
-        alarm.currentTime =
-        0;
     }
 
 });
 
-// =========================
-// START DETECTION
-// =========================
-
 video.addEventListener(
 "loadeddata",
-async ()=>{
+async () => {
 
     async function detect(){
 
