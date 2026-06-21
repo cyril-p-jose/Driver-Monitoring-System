@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-<title>Driver Monitoring System</title>
+    <title>AI Driver Monitoring System</title>
 
-<link rel="stylesheet"
-href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 
 </head>
 
@@ -18,39 +19,65 @@ href="{{ url_for('static', filename='style.css') }}">
 
 <div class="container">
 
-<h1>🚗 Driver Monitoring System</h1>
+    <h1>🚗 AI Driver Monitoring System</h1>
 
-<div class="video-container">
+    <div class="video-container">
 
-<video
-id="video"
-autoplay
-muted
-playsinline>
-</video>
+        <video
+            id="video"
+            autoplay
+            muted
+            playsinline>
+        </video>
 
-<canvas id="canvas"></canvas>
+        <canvas id="canvas"></canvas>
 
-</div>
+    </div>
 
-<div class="cards">
+    <div class="cards">
 
-<div class="card">
-<h2>Face</h2>
-<p id="faceStatus">Detecting...</p>
-</div>
+        <div class="card">
+            <h2>Face Status</h2>
+            <p id="faceStatus">Detecting...</p>
+        </div>
 
-<div class="card">
-<h2>Head Position</h2>
-<p id="headPose">Forward</p>
-</div>
+        <div class="card">
+            <h2>Head Position</h2>
+            <p id="headPose">Forward</p>
+        </div>
 
-<div class="card">
-<h2>Drowsiness</h2>
-<p id="drowsiness">Monitoring</p>
-</div>
+        <div class="card">
+            <h2>Drowsiness</h2>
+            <p id="drowsiness">Normal</p>
+        </div>
 
-</div>
+        <div class="card">
+            <h2>Yawning</h2>
+            <p id="yawning">No</p>
+        </div>
+
+        <div class="card">
+            <h2>Driver Score</h2>
+            <p id="score">100</p>
+        </div>
+
+        <div class="card">
+            <h2>Drowsiness Count</h2>
+            <p id="drowsyCount">0</p>
+        </div>
+
+        <div class="card">
+            <h2>Yawning Count</h2>
+            <p id="yawnCount">0</p>
+        </div>
+
+        <div class="card history-card">
+            <h2>Alert History</h2>
+
+            <ul id="history"></ul>
+        </div>
+
+    </div>
 
 </div>
 
