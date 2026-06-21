@@ -16,285 +16,253 @@ document.getElementById("headPose");
 const drowsiness =
 document.getElementById("drowsiness");
 
+const earValue =
+document.getElementById("earValue");
+
 let eyesClosedStart = null;
 let drowsyDetected = false;
 
 function playAlarm(){
 
-    const audioContext =
-    new (
-        window.AudioContext ||
-        window.webkitAudioContext
-    )();
+const audioContext =
+new (
+window.AudioContext ||
+window.webkitAudioContext
+)();
 
-    const oscillator =
-    audioContext.createOscillator();
+const oscillator =
+audioContext.createOscillator();
 
-    oscillator.type = "sine";
+oscillator.frequency.value = 1000;
 
-    oscillator.frequency.value = 1000;
+oscillator.connect(
+audioContext.destination
+);
 
-    oscillator.connect(
-        audioContext.destination
-    );
+oscillator.start();
 
-    oscillator.start();
+setTimeout(() => {
 
-    setTimeout(() => {
+oscillator.stop();
 
-        oscillator.stop();
-
-    }, 500);
+}, 500);
 
 }
 
-function distance(
-    p1,
-    p2
-){
+document
+.getElementById("startButton")
+.addEventListener("click", () => {
 
-    const dx =
-    p1.x - p2.x;
+playAlarm();
 
-    const dy =
-    p1.y - p2.y;
+});
 
-    return Math.sqrt(
-        dx * dx +
-        dy * dy
-    );
+function distance(p1,p2){
+
+const dx = p1.x - p2.x;
+const dy = p1.y - p2.y;
+
+return Math.sqrt(
+dx*dx + dy*dy
+);
+
 }
 
 navigator.mediaDevices
 .getUserMedia({
-    video:true
+video:true
 })
-.then(stream => {
+.then(stream=>{
 
-    video.srcObject =
-    stream;
-
-    video.play();
-
-    console.log(
-        "Camera Started"
-    );
+video.srcObject = stream;
 
 })
-.catch(error => {
+.catch(error=>{
 
-    console.error(
-        "Camera Error:",
-        error
-    );
+console.error(error);
 
 });
 
 const faceMesh =
 new FaceMesh({
 
-    locateFile:file =>
-    `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
+locateFile:file =>
+`https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
 
 });
 
 faceMesh.setOptions({
 
-    maxNumFaces:1,
-
-    refineLandmarks:true,
-
-    minDetectionConfidence:0.5,
-
-    minTrackingConfidence:0.5
+maxNumFaces:1,
+refineLandmarks:true,
+minDetectionConfidence:0.5,
+minTrackingConfidence:0.5
 
 });
 
-faceMesh.onResults(results => {
+faceMesh.onResults(results=>{
 
-    canvas.width =
-    video.videoWidth;
+canvas.width =
+video.videoWidth;
 
-    canvas.height =
-    video.videoHeight;
+canvas.height =
+video.videoHeight;
 
-    ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
 
-    if(
-        results.multiFaceLandmarks &&
-        results.multiFaceLandmarks.length > 0
-    ){
+if(
+results.multiFaceLandmarks &&
+results.multiFaceLandmarks.length > 0
+){
 
-        faceStatus.innerHTML =
-        "✅ Face Detected";
+faceStatus.innerHTML =
+"✅ Face Detected";
 
-        const face =
-        results.multiFaceLandmarks[0];
+const face =
+results.multiFaceLandmarks[0];
 
-        face.forEach(point => {
+face.forEach(point=>{
 
-            ctx.beginPath();
+ctx.beginPath();
 
-            ctx.arc(
-                point.x *
-                canvas.width,
+ctx.arc(
+point.x * canvas.width,
+point.y * canvas.height,
+1.5,
+0,
+Math.PI*2
+);
 
-                point.y *
-                canvas.height,
+ctx.fillStyle =
+"#00ffff";
 
-                1.5,
-                0,
-                Math.PI * 2
-            );
+ctx.fill();
 
-            ctx.fillStyle =
-            "#00ffff";
+});
 
-            ctx.fill();
+const nose =
+face[1];
 
-        });
+if(nose.x < 0.45){
 
-        const nose =
-        face[1];
+headPose.innerHTML =
+"➡ Looking Right";
 
-        if(
-            nose.x < 0.45
-        ){
+}
+else if(nose.x > 0.55){
 
-            headPose.innerHTML =
-            "⬅ Looking Left";
+headPose.innerHTML =
+"⬅ Looking Left";
 
-        }
-        else if(
-            nose.x > 0.55
-        ){
+}
+else{
 
-            headPose.innerHTML =
-            "➡ Looking Right";
+headPose.innerHTML =
+"⬆ Looking Forward";
 
-        }
-        else{
+}
 
-            headPose.innerHTML =
-            "⬆ Looking Forward";
+const leftTop = face[159];
+const leftBottom = face[145];
+const leftLeft = face[33];
+const leftRight = face[133];
 
-        }
+const eyeHeight =
+distance(
+leftTop,
+leftBottom
+);
 
-        const leftTop =
-        face[159];
+const eyeWidth =
+distance(
+leftLeft,
+leftRight
+);
 
-        const leftBottom =
-        face[145];
+const EAR =
+eyeHeight /
+eyeWidth;
 
-        const leftLeft =
-        face[33];
+earValue.innerHTML =
+EAR.toFixed(2);
 
-        const leftRight =
-        face[133];
+if(EAR < 0.28){
 
-        const eyeHeight =
-        distance(
-            leftTop,
-            leftBottom
-        );
+if(!eyesClosedStart){
 
-        const eyeWidth =
-        distance(
-            leftLeft,
-            leftRight
-        );
+eyesClosedStart =
+Date.now();
 
-        const EAR =
-        eyeHeight /
-        eyeWidth;
+}
 
-        if(
-            EAR < 0.20
-        ){
+const closedTime =
+Date.now() -
+eyesClosedStart;
 
-            if(
-                !eyesClosedStart
-            ){
+if(closedTime > 1000){
 
-                eyesClosedStart =
-                Date.now();
+drowsiness.innerHTML =
+"🚨 DROWSY";
 
-            }
+if(!drowsyDetected){
 
-            const closedTime =
-            Date.now() -
-            eyesClosedStart;
+drowsyDetected = true;
 
-            if(
-                closedTime > 2000
-            ){
+playAlarm();
 
-                drowsiness.innerHTML =
-                "🚨 DROWSY";
+}
 
-                if(
-                    !drowsyDetected
-                ){
+}
 
-                    drowsyDetected =
-                    true;
+}
+else{
 
-                    playAlarm();
+eyesClosedStart = null;
 
-                }
+drowsiness.innerHTML =
+"✅ Normal";
 
-            }
+drowsyDetected = false;
 
-        }
-        else{
+}
 
-            eyesClosedStart =
-            null;
+}
+else{
 
-            drowsiness.innerHTML =
-            "✅ Normal";
+faceStatus.innerHTML =
+"❌ No Face";
 
-            drowsyDetected =
-            false;
+headPose.innerHTML = "-";
 
-        }
+drowsiness.innerHTML = "-";
 
-    }
-    else{
+earValue.innerHTML = "-";
 
-        faceStatus.innerHTML =
-        "❌ No Face";
-
-        headPose.innerHTML =
-        "-";
-
-        drowsiness.innerHTML =
-        "-";
-
-    }
+}
 
 });
 
 video.addEventListener(
 "loadeddata",
-async () => {
+async ()=>{
 
-    async function detect(){
+async function detect(){
 
-        await faceMesh.send({
-            image:video
-        });
+await faceMesh.send({
+image:video
+});
 
-        requestAnimationFrame(
-            detect
-        );
-    }
+requestAnimationFrame(
+detect
+);
 
-    detect();
+}
+
+detect();
 
 });
