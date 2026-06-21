@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
@@ -6,15 +6,5 @@ app = Flask(__name__)
 def home():
     return render_template("index.html")
 
-@app.route("/detect_objects", methods=["POST"])
-def detect_objects():
-
-    return jsonify({
-        "phone": False,
-        "seatbelt": True,
-        "persons": 1,
-        "model_loaded": True
-    })
-
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(debug=True)
